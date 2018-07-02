@@ -1,0 +1,54 @@
+body
+{
+  width: 100%;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+
+.add
+{
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -ms-user-select: none;
+
+  outline: none;
+  border: 1px solid transparent;
+
+  display: inline-block;
+  white-space: nowrap;
+
+  height: 24px;
+  padding-left: 12px;
+  padding-right: 12px;
+
+  cursor: pointer;
+
+  position: relative;
+  line-height: 1;
+
+  word-spacing: -3px;
+  position: fixed;
+
+  bottom: 10px;
+  right: 10px;
+
+  color: #ccc;
+  border: solid 1px #666666;
+  background-color: transparent;
+}
+.add:hover
+{
+  color: #fff;
+  border: solid 1px transparent;
+  background-color: #222;
+}
+
+.add:active,
+.add.checked
+{
+  color: #ffa04c;
+  border: solid 1px transparent;
+  background-color: #222;
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>Tree</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="index.css" rel="stylesheet">
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <button class="add" id="insert">插入数据</button>
+</body>
+<script src="./fabric.js"></script>
+<script src="./graph.js"></script>
+<script type="module">
+    import tree from '../index.js'
+    import dataGenerate from './data-generate.js'
+    let graph = new Graph(tree)
+    let datas = dataGenerate(128)
+    // datas.forEach(key => {
+    //     graph.doInsert(key, false)
+    // })
+    // graph.canvas.renderAll()
+    document.getElementById('insert').addEventListener('click', function (e) {
+        let key = datas.pop()
+        if (key) graph.doInsert(key)
+    }, false)
+</script>
+</html>
