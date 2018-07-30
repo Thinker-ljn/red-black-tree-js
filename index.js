@@ -1,4 +1,4 @@
-import Tree from './rb-tree.js'
+import Tree from './lib/rb-tree.js'
 
 let tree = new Tree
 
