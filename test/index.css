@@ -5,8 +5,29 @@ body
   padding: 0;
   margin: 0;
 }
+.function-area
+{
+  position: fixed;
+  top: 0;
+  right:0;
 
-.add
+  width: 200px;
+  height: 100vh;
+
+  border-left: 1px solid #222;
+}
+
+.msgs
+{
+  width: 100%;
+  height: calc(100% - 200px);
+}
+.menu
+{
+  width: 100%;
+  height: 200px;
+}
+button
 {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -29,26 +50,31 @@ body
   line-height: 1;
 
   word-spacing: -3px;
-  position: fixed;
-
-  bottom: 10px;
-  right: 10px;
 
   color: #ccc;
   border: solid 1px #666666;
   background-color: transparent;
 }
-.add:hover
+.button:hover
 {
   color: #fff;
   border: solid 1px transparent;
   background-color: #222;
 }
 
-.add:active,
-.add.checked
+.button:active,
+.button.checked
 {
   color: #ffa04c;
   border: solid 1px transparent;
   background-color: #222;
+}
+
+.add
+{
+
+  position: absolute;
+
+  bottom: 10px;
+  right: 10px;
 }

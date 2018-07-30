@@ -14,6 +14,8 @@ function Graph (tree) {
     x: document.body.clientWidth / 2,
     y: this.intervalY
   }
+
+  this.currNode = null
 }
 
 Graph.prototype = {
@@ -27,6 +29,33 @@ Graph.prototype = {
     this.drawCircle(node.key, node.pos, node.color)
     if (node.parent) {
       this.drawLine(node.pos, node.parent.pos)
+    }
+  },
+  drawCurrNode (node) {
+    if (!this.currNode) {
+      this.currNode = new fabric.Circle({
+        radius: 20,
+        strokeWidth: 1,
+        fill: '#999',
+        stroke: 'yellow',
+        left: node.pos.x,
+        top: node.pos.y,
+        originX: 'center',
+        originY: 'center'
+      })
+      this.canvas.add(this.currNode)
+      this.currNode.moveTo(0)
+      this.canvas.renderAll()
+    } else {
+      this.currNode.animate('left', node.pos.x, {
+        onChange: this.canvas.renderAll.bind(this.canvas),
+        duration: 200
+      })
+
+      this.currNode.animate('top', node.pos.y, {
+        onChange: this.canvas.renderAll.bind(this.canvas),
+        duration: 200
+      })
     }
   },
   drawLine (node1, node2) {
@@ -116,3 +145,5 @@ Graph.prototype = {
     }
   }
 }
+
+export default Graph

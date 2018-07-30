@@ -1,6 +1,6 @@
-export default function generate (len) {
+export default function generate (len, random = true) {
   let arr = Array.from(Array(len).keys())
-  while (0 != len) {
+  while (random && 0 != len) {
     let random = Math.floor(Math.random() * len)
     len--
 
