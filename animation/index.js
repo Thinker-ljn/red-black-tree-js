@@ -1,19 +1,39 @@
-import StepFind from './find.js'
+import InsertFlow from './insert-flow.js'
 
 class Animation {
-  constructor (graph, options) {
+  constructor (graph) {
     this.interval = 1000
-    this.type = options.type
     this.graph = graph
-    this.stepFind = new StepFind(graph, null, options.findKey)
+    this.steps = []
+
+    this.msg = ''
+    this.flow = {}
   }
 
   next () {
-    this.stepFind.exec()
+    let step = this.flow.execNext()
+    if (!step) return false
+
+    this.steps.push(step)
+    step.exec(this.graph)
+
+    if (step.msg) {
+      this.msg += step.msg + '</br>'
+      document.getElementById('msg').innerHTML = this.msg
+    }
+    this.graph.renderAll()
   }
 
   prev () {
 
+  }
+
+  find () {
+
+  }
+
+  insert (key) {
+    this.flow = new InsertFlow(this.graph.tree, key)
   }
 }
 

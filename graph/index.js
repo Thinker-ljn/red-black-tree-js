@@ -1,6 +1,6 @@
 function Graph (tree) {
   this.tree = tree
-  this.canvas = new fabric.Canvas('canvas', {
+  this.canvas = new fabric.StaticCanvas('canvas', {
     renderOnAddRemove: false,
     backgroundColor: '#999'
   })
@@ -14,52 +14,29 @@ function Graph (tree) {
     x: document.body.clientWidth / 2,
     y: this.intervalY
   }
-
   this.currNode = null
 }
 
 Graph.prototype = {
+  renderAll () {
+    this.canvas.renderAll()
+  },
   draw (autoRender = true) {
     this.canvas.remove(...this.canvas.getObjects())
     this.generateTreeData(this.tree)
     this.tree.traversal('level', this.drawNode.bind(this))
-    if (autoRender) this.canvas.renderAll()
+    if (autoRender) this.renderAll()
   },
   drawNode (node) {
-    this.drawCircle(node.key, node.pos, node.color)
+    let graphNode = this.drawCircle(node.key, node.pos, node.color)
     if (node.parent) {
-      this.drawLine(node.pos, node.parent.pos)
+      this.drawLine(node, node.parent)
     }
-  },
-  drawCurrNode (node) {
-    if (!this.currNode) {
-      this.currNode = new fabric.Circle({
-        radius: 20,
-        strokeWidth: 1,
-        fill: '#999',
-        stroke: 'yellow',
-        left: node.pos.x,
-        top: node.pos.y,
-        originX: 'center',
-        originY: 'center'
-      })
-      this.canvas.add(this.currNode)
-      this.currNode.moveTo(0)
-      this.canvas.renderAll()
-    } else {
-      this.currNode.animate('left', node.pos.x, {
-        onChange: this.canvas.renderAll.bind(this.canvas),
-        duration: 200
-      })
 
-      this.currNode.animate('top', node.pos.y, {
-        onChange: this.canvas.renderAll.bind(this.canvas),
-        duration: 200
-      })
-    }
+    return graphNode
   },
-  drawLine (node1, node2) {
-    let line = new fabric.Line([node1.x, node1.y, node2.x, node2.y], {
+  drawLine (node, pnode) {
+    let line = new fabric.Line([node.pos.x, node.pos.y, pnode.pos.x, pnode.pos.y], {
       strokeWidth: 2,
       stroke: '#fff',
       selectable: false,
@@ -77,13 +54,16 @@ Graph.prototype = {
       originX: 'center',
       originY: 'center'
     })
+    line.__type = 'line'
+    line.__cnodeKey = node.key
+    line.__pnodeKey = pnode.key
     this.canvas.add(line)
     line.moveTo(0)
   },
-  drawCircle (value, pos, color = '#999') {
+  drawCircle (value, pos, color) {
     let circle = new fabric.Circle({
       radius: 15,
-      fill: color,
+      fill: color || '#999',
       strokeWidth: 1,
       stroke: '#fff',
       originX: 'center',
@@ -103,11 +83,18 @@ Graph.prototype = {
       originX: 'center',
       originY: 'center'
     })
-    group.value = value
-    group.on('selected', () => {
-      this.doRemove(group.value)
-    })
+    group.__value = value
+    group.__type = 'node'
+    // group.on('selected', () => {
+    //   this.doRemove(group.value)
+    // })
+    group.__dye = function (color) {
+      circle.set({
+        fill: color
+      })
+    }
     this.canvas.add(group)
+    return group
   },
   generateTreeData () {
     let callback = this.getTraversalCallback()
