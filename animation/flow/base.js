@@ -7,6 +7,11 @@ import {
   sibling,
   grandpa
 } from '../../lib/utils.js'
+
+const compareMap = {
+  left: '待插入节点小于当前节点，',
+  right: '待插入节点大于当前节点，'
+}
 const relationMap = {
   red: '红色',
   black: '黑色',
@@ -50,7 +55,7 @@ class Base {
       this.currNode = this.relationParse(relation)
     }
 
-    let msg = `将${relationMap[relation]}设为新当前节点`
+    let msg = `${compareMap[relation] || ''}将${relationMap[relation]}设为新当前节点`
     return this.genStep('setCurr', {node: this.currNode}, msg)
   }
 
