@@ -56,6 +56,7 @@ class AnimationGraph extends BaseGraph {
         duration: 200
       })
     }
+    this.currNode.__key = node.key
   }
 
   findGraphNode (node) {

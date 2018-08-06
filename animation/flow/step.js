@@ -5,11 +5,17 @@ class Step {
     this.action = action
     this.payload = payload
     this.msg = msg
+    this.nextEnd = false
   }
 
   exec (graph) {
-    if (typeof this[this.action] !== 'function') return
-    this[this.action](graph)
+    if (typeof this[this.action] === 'function') {
+      this[this.action](graph)
+    }
+
+    if (this.nextEnd) {
+      graph.clearCurr()
+    }
   }
 
   createNode (graph) {
@@ -27,49 +33,34 @@ class Step {
 
   dye (graph) {
     let graphNode = graph.findGraphNode(this.payload.node)
+    this.payload.node.color = this.payload.color
     graphNode.__dye(this.payload.color)
   }
 
   preInsert (graph) {
-    let {child, node} = this.payload
+    let {child, node, parent} = this.payload
     let pos = {
-      x: node.parent.pos.x,
-      y: node.parent.pos.y + 60
+      x: 20,
+      y: 60
     }
+
+    if (!parent) {
+      graph.tree.root = node
+    } else {
+      node.parent = parent
+      parent[child] = node
+      pos.x = node.parent.pos.x,
+      pos.y = node.parent.pos.y + 60
+    }
+
     if (child === 'left') {
       pos.x -= 20
     } else {
       pos.x += 20
     }
-    graph.drawLine(node, node.parent)
+    if (parent) graph.drawLine(node, node.parent)
 
-    graph.generateTreeData(graph.tree)
-
-    let map = graph.tree.inorderList.reduce((p, c) => {
-      p[c.key] = c
-      return p
-    }, {})
-    let objects = graph.canvas._objects
-
-    for (let i = 0; i < objects.length; i++) {
-      let object = objects[i]
-      if (object.__type === 'line') {
-        let cp = map[object.__cnodeKey].pos
-        let pp = map[object.__pnodeKey].pos
-
-        graph.move(object, {x1: cp.x, y1: cp.y, x2: pp.x, y2: pp.y})
-      }
-      if (object.__type === 'node') {
-        // if (object.__value === node.key) {
-        //   object.__dye(node.color)
-        //   this.setCurr(graph)
-        // }
-
-        let {x, y} = map[object.__value].pos
-
-        graph.move(object, {left: x, top: y})
-      }
-    }
+    this.doAnimation(graph)
   }
 
   rotate (graph) {
@@ -114,6 +105,7 @@ class Step {
     }, {})
     let objects = graph.canvas._objects
 
+    let currKey = graph.currNode ? graph.currNode.__key : null
     for (let i = 0; i < objects.length; i++) {
       let object = objects[i]
       if (object.__type === 'line') {
@@ -126,6 +118,10 @@ class Step {
         let {x, y} = map[object.__value].pos
 
         graph.move(object, {left: x, top: y})
+
+        if (object.__value === currKey) {
+          graph.move(graph.currNode, {left: x, top: y})
+        }
       }
     }
   }

@@ -1,4 +1,4 @@
-import InsertFlow from './flow/insert.js'
+import InsertFlow from './flow/normal-insert.js'
 
 class Animation {
   constructor (graph) {

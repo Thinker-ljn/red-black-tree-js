@@ -1,4 +1,4 @@
-import Step from '../step.js'
+import Step from './step.js'
 import Base from './base.js'
 import {
   isLeftChild,
@@ -7,7 +7,7 @@ import {
   setBlack,
   uncle,
   grandpa
-} from '../../../lib/utils.js'
+} from '../../lib/utils.js'
 
 class Fixup extends Base {
   constructor (tree, currNode) {
