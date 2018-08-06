@@ -1,4 +1,4 @@
-import InsertFlow from './insert-flow.js'
+import InsertFlow from './flow/insert.js'
 
 class Animation {
   constructor (graph) {
@@ -18,8 +18,10 @@ class Animation {
     step.exec(this.graph)
 
     if (step.msg) {
-      this.msg += step.msg + '</br>'
-      document.getElementById('msg').innerHTML = this.msg
+      this.msg += `【${step.action}】: ${step.msg}</br>`
+      let msgDom = document.getElementById('msg')
+      msgDom.innerHTML = this.msg
+      msgDom.scrollTop = msgDom.scrollHeight
     }
     this.graph.renderAll()
   }
@@ -34,6 +36,7 @@ class Animation {
 
   insert (key) {
     this.flow = new InsertFlow(this.graph.tree, key)
+    if (this.msg) this.msg += '</br></br>'
   }
 }
 

@@ -17,11 +17,12 @@ function insertBtn () {
 }
 
 function nextBtn () {
+  if (!datas.length) return
   if (!animation) {
     animation = new Animation(graph)
     animation.insert(datas.shift())
   } else {
-    if (animation.flow.status === 'finished') {
+    if (animation.flow.next === 'finished') {
       animation.insert(datas.shift())
     }
     animation.next()

@@ -35,7 +35,7 @@ class AnimationGraph extends BaseGraph {
       this.currNode = new fabric.Circle({
         radius: 20,
         strokeWidth: 1,
-        fill: '#999',
+        fill: '',
         stroke: 'yellow',
         left: node.pos.x,
         top: node.pos.y,
@@ -63,6 +63,18 @@ class AnimationGraph extends BaseGraph {
     for (let i = 0; i < objects.length; i++) {
       let object = objects[i]
       if (object.__type === 'node' && object.__value === node.key) {
+        return object
+      }
+    }
+
+    return null
+  }
+
+  findGraphLine (pnode, cnode) {
+    let objects = this.canvas._objects
+    for (let i = 0; i < objects.length; i++) {
+      let object = objects[i]
+      if (object.__type === 'line' && object.__pnodeKey === pnode.key && object.__cnodeKey === cnode.key) {
         return object
       }
     }
