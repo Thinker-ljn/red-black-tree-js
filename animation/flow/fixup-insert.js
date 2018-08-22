@@ -1,4 +1,3 @@
-import Step from './step.js'
 import Base from './base.js'
 import {
   isLeftChild,
@@ -32,7 +31,7 @@ class Fixup extends Base {
       let [next, msg, childKey] = this.getFixWay()
       this.next = next
       this[next] = new this[next](this.tree, this.currNode, childKey)
-      return new Step('fix', {}, msg)
+      return this.genStep('fix', {}, msg)
     }
   }
 

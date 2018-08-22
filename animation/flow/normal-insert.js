@@ -54,14 +54,14 @@ class InsertFlow extends Base {
     }
   }
 
-  isEmptyChild (child) {
-    let cn = {left: '左子节点', right: '右子节点'}
+  isEmptyChild (which) {
     let cm = {left: '小于', right: '大于'}
-    let msg = `待插入节点${cm[child]}当前节点, `
+    let cn = {left: '左子节点', right: '右子节点'}
+    let msg = `待插入节点${cm[which]}当前节点, `
 
-    if (this.currNode[child]) {
+    if (this.currNode[which]) {
       this.next = 'compare'
-      return this.setCurr(child)
+      return this.setCurr(which)
     } else {
       this.next = 'setCurrInsert'
       return this.genStep(
@@ -69,9 +69,9 @@ class InsertFlow extends Base {
         {
           node: this.insertNode,
           parent: this.currNode,
-          child: child
+          which: which
         },
-        msg + `${cn[child]}为空，直接插入`
+        msg + `${cn[which]}为空，直接插入`
       )
     }
   }

@@ -1,11 +1,11 @@
 import InsertFlow from './flow/normal-insert.js'
+import RemoveFlow from './flow/normal-remove.js'
 
 class Animation {
   constructor (graph) {
     this.interval = 1000
     this.graph = graph
     this.steps = []
-
     this.msg = ''
     this.flow = {}
   }
@@ -37,6 +37,12 @@ class Animation {
   insert (key) {
     this.flow = new InsertFlow(this.graph.tree, key)
     if (this.msg) this.msg += '</br></br>'
+  }
+
+  remove (key) {
+    this.flow = new RemoveFlow(this.graph.tree, key)
+    if (this.msg) this.msg += `</br></br>`
+    else this.msg += `删除【${key}】</br></br>`
   }
 }
 

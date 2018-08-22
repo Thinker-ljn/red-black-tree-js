@@ -82,6 +82,44 @@ class AnimationGraph extends BaseGraph {
 
     return null
   }
+
+  removeGraphNode (node) {
+    let gn = this.findGraphNode(node)
+    if (gn) this.canvas.remove(gn)
+  }
+
+  removeGraphLine (pnode, cnode) {
+    let gl = this.findGraphLine(pnode, cnode)
+    if (gl) this.canvas.remove(gl)
+  }
+
+  drawBeforeNode (bNode, lines) {
+    let objects = this.canvas._objects
+    let bn = null
+    for (let i = 0; i < objects.length; i++) {
+      let object = objects[i]
+      if (object.__type === 'line' && lines[object.__pcKey]) {
+        object.set({stroke: 'blue'})
+      }
+      if (object.__type === 'node' && object.__value === bNode.key) {
+        bn = new fabric.Circle({
+          radius: 18,
+          strokeWidth: 1,
+          fill: '#999',
+          stroke: 'blue',
+          left: object.left,
+          top: object.top,
+          originX: 'center',
+          originY: 'center'
+        })
+        bn.__type = 'beforeNode'
+      }
+    }
+    if (bn) {
+      this.canvas.add(bn)
+      bn.moveTo(0)
+    }
+  }
 }
 
 export default AnimationGraph

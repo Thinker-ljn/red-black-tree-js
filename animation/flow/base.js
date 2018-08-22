@@ -59,23 +59,25 @@ class Base {
     return this.genStep('setCurr', {node: this.currNode}, msg)
   }
 
-  dye (color, relation = 'self') {
+  dye (color, relation = 'self', node = null) {
     let msg = ''
     if (relationMap[relation] === void 0) {
       msg = relation
       relation = 'self'
     }
 
-    let node = this.relationParse(relation)
+    if (!node) node = this.relationParse(relation)
 
     if (!msg) msg = `将当前节点${relationMap[relation]}染成${relationMap[color]}`
 
     return this.genStep('dye', {node: node, color: color}, msg)
   }
 
-  rotate () {
+  rotate (relation) {
+    let node = this.currNode
+    if (relation) node = this.relationParse(relation)
     let msg = '以当前节点进行' + (this.rotateDirection === 'left' ? '左' : '右') + '旋'
-    return this.genStep('rotate', {direction: this.rotateDirection, node: this.currNode}, msg)
+    return this.genStep('rotate', {direction: this.rotateDirection, node: node}, msg)
   }
 
   genStep (action, payload, msg) {

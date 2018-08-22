@@ -3,34 +3,45 @@ import Animation from '../animation/index.js'
 import tree from '../index.js'
 import dataGenerate from './data-generate.js'
 let graph = new Graph(tree)
-let datas = dataGenerate(35)
-// datas.forEach(key => {
-//     graph.doInsert(key, false)
-// })
-// graph.canvas.renderAll()
+window.graph = graph
+let nums = 35
+let isRandom = false
+let datas = dataGenerate(nums, isRandom)
 
 let animation
+
+function init () {
+  datas.forEach(key => {
+      graph.doInsert(key, false)
+  })
+  graph.canvas.renderAll()
+}
+
+function getNextKey () {
+  return window.myKey || datas.shift()
+}
 
 function insertBtn () {
   let key = datas.shift()
   if (key) graph.doInsert(key)
 }
 
-function nextBtn () {
+function nextBtn (action = 'insert') {
   if (!datas.length) return
   if (!animation) {
     animation = new Animation(graph)
-    animation.insert(datas.shift())
+    animation[action](getNextKey())
   } else {
     if (animation.flow.next === 'finished') {
-      animation.insert(datas.shift())
+      animation[action](getNextKey())
     }
     animation.next()
   }
 }
 function bindButton (id, fn) {
   document.getElementById(id).addEventListener('click', function (e) {
-    fn(e)
+    fn('insert')
+    // fn('remove')
   }, false)
 }
 

@@ -1,3 +1,5 @@
+import Node from './node.js'
+import Arrow from './arrow.js'
 function Graph (tree) {
   this.tree = tree
   this.canvas = new fabric.StaticCanvas('canvas', {
@@ -28,37 +30,19 @@ Graph.prototype = {
     if (autoRender) this.renderAll()
   },
   drawNode (node) {
-    let graphNode = this.drawCircle(node.key, node.pos, node.color)
+    let graphNode = new Node(node)
+    this.canvas.add(graphNode)
     if (node.parent) {
-      this.drawLine(node, node.parent)
+      let arrow = this.drawArrow(node.parent, node)
+      graphNode.setRelation(arrow)
     }
-
     return graphNode
   },
-  drawLine (node, pnode) {
-    let line = new fabric.Line([node.pos.x, node.pos.y, pnode.pos.x, pnode.pos.y], {
-      strokeWidth: 2,
-      stroke: '#fff',
-      selectable: false,
-      hasBorders: true,
-      lockUniScaling: true,
-      lockRotation: true,
-      lockSkewingX: true,
-      lockSkewingY: true,
-      lockScalingFlip: true,
-      lockScalingX: true,
-      lockScalingY: true,
-      lockMovementX: true,
-      lockMovementY: true,
-      hasControls: false,
-      originX: 'center',
-      originY: 'center'
-    })
-    line.__type = 'line'
-    line.__cnodeKey = node.key
-    line.__pnodeKey = pnode.key
-    this.canvas.add(line)
-    line.moveTo(0)
+  drawArrow (parent, node) {
+    let arrow = new Arrow(parent, node)
+    this.canvas.add(arrow, arrow.tr)
+    arrow.moveTo(0)
+    return arrow
   },
   drawCircle (value, pos, color) {
     let circle = new fabric.Circle({
@@ -129,6 +113,29 @@ Graph.prototype = {
       }
 
       prevLeft = x
+    }
+  },
+
+  print () {
+    let objs = this.canvas._objects
+    for (let i = 0; i < objs.length; i++) {
+      let o = objs[i]
+      // if (o.constructor.name === 'GraphArrow') {
+      //   console.log("================")
+      //   console.log(`arrow: 【 ${o.__pnode.key} --- ${o.__cnode.key} 】`)
+      // }
+
+      if (o.constructor.name === 'GraphNode') {
+        console.log("")
+        console.log("==================")
+        console.log(`node: 【 ${o.__node.key} 】`)
+        for (let k of ['__parentArrow', '__leftArrow', '__rightArrow']) {
+          if (o[k]) {
+            let p = o[k]
+            console.log(`${k}: 【 ${p.__pnode.key} --- ${p.__cnode.key} 】`)
+          }
+        }
+      }
     }
   }
 }
