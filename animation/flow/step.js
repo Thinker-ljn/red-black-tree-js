@@ -14,7 +14,7 @@ class Step {
     }
 
     if (this.nextEnd) {
-      graph.clear()
+      graph.clearDirty()
     }
   }
 
@@ -22,31 +22,11 @@ class Step {
     graph.drawNode(this.payload.node)
   }
 
-  insertFirst (graph) {
-    this.payload.node.pos = {x: 20, y: 60}
-    graph.move(this.payload.node, {left: 20, top: 60})
-  }
-
-  setCurr (graph) {
-    let node = this.payload.node
-    if (node.key === null) {
-      let graphNode = graph.drawNode(node)
-      graph.nullNode = graphNode
-    }
-    graph.drawCurrNode(node)
-  }
-
-  dye (graph) {
-    let graphNode = this.payload.node.graph
-    this.payload.node.color = this.payload.color
-    graphNode.__dye(this.payload.color)
-  }
-
   preInsert (graph) {
     let {which, node, parent} = this.payload
     let pos = {
-      x: 20,
-      y: 60
+      x: graph.startX,
+      y: graph.startY
     }
 
     if (!parent) {
@@ -90,14 +70,31 @@ class Step {
     })
     dn.text.moveTo(graph.canvas._objects.length)
     graph.move(dn.text, {left: 0, top: 0})
+
+    graph.drawNodeStatus(bNode, 'needRemove')
   }
 
   remove (graph) {
-    let {dNode, child} = this.payload
-    this._remove(graph, dNode, child)
-    dNode.graph.remove()
+    let node = this.payload.needRemoveNode
+    let objects = graph.canvas._objects
+    let bChild = node.left ? node.left : node.right
+
+    for (let i = 0; i < objects.length; i++) {
+      let object = objects[i]
+      if (object.constructor.name === 'GraphArrow') {
+        object.changeColor('#fff')
+      }
+
+      if (object.__type === 'beforeNode') {
+        graph.canvas.remove(object)
+      }
+    }
+
+    this._remove(graph, node, bChild)
+    node.graph.remove()
     this.doAnimation(graph)
   }
+
   _remove (graph, dNode, child) {
     if (dNode.parent) {
       let parent = dNode.parent
@@ -115,52 +112,26 @@ class Step {
       graph.tree.root = child || null
     }
   }
-  removeBeforeNode (graph) {
-    let {bNode, dNode} = this.payload
-    let objects = graph.canvas._objects
-    let bChild = bNode.left ? bNode.left : bNode.right
 
+  setNeedRemove (graph) {
+    let node = this.payload.node
+    graph.clearStatus('curr')
+    graph.drawNodeStatus(node, 'needRemove')
+  }
 
-    for (let i = 0; i < objects.length; i++) {
-      let object = objects[i]
-      if (object.constructor.name === 'GraphArrow') {
-        object.changeColor('#fff')
-      }
-
-      if (object.__type === 'beforeNode') {
-        graph.canvas.remove(object)
-      }
+  setCurr (graph) {
+    let node = this.payload.node
+    if (node.key === null) {
+      let graphNode = graph.drawNode(node)
+      graph.nullNode = graphNode
     }
+    graph.drawNodeStatus(node, 'curr')
+  }
 
-    this._remove(graph, bNode, bChild)
-    bNode.graph.remove()
-    this.doAnimation(graph)
-
-    // let beforeGraphNode = bNode.graph
-    // if (bChild) {
-    //   let bParent = bNode.parent
-    //   let which = bNode.which
-    //   bParent[which] = bChild
-    //   bChild.parent = bParent
-
-    //   bChild.graph.__parent = bParent.graph
-
-    //   let arrow = graph.drawArrow(bParent, bChild)
-    //   bChild.graph.setRelation(arrow)
-
-    //   let [circle, text] = beforeGraphNode._objects
-    //   circle.set({fill: '#999', stroke: circle.fill})
-    //   graph.move(circle, {
-    //     radius: 18
-    //   })
-
-    //   beforeGraphNode.remove(text)
-    //   beforeGraphNode.__value = bChild.key
-    //   beforeGraphNode.__type = 'bNode'
-    // } else {
-    //   let line3 = graph.findGraphLine(bParent, bNode)
-    //   graph.canvas.remove(beforeGraphNode, line3)
-    // }
+  dye (graph) {
+    let graphNode = this.payload.node.graph
+    this.payload.node.color = this.payload.color
+    graphNode.__dye(this.payload.color)
   }
 
   rotate (graph) {

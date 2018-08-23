@@ -1,24 +1,12 @@
 import Node from '../../lib/node.js'
 import Base from './base.js'
 import Fixup from './fixup-insert.js'
-import {
-  isLeftChild,
-  isRightChild,
-  isRed,
-  isBlack,
-  setRed,
-  setBlack,
-  uncle,
-  sibling,
-  grandpa
-} from '../../lib/utils.js'
 
 class InsertFlow extends Base {
   constructor (tree, key) {
     super(tree, null)
     this.next = 'create'
 
-    this.bigFlow = true
     this.key = key
     this.insertNode = null
 

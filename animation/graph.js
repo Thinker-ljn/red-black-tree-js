@@ -5,6 +5,14 @@ class AnimationGraph extends BaseGraph {
   constructor (tree) {
     super(tree)
     this.nullNode = null
+    this.statusNode = {
+      curr: null,
+      needRemove: null
+    }
+    this.statusColor = {
+      curr: 'yellow',
+      needRemove: '#ff6666'
+    }
   }
 
   move (node, props) {
@@ -24,44 +32,48 @@ class AnimationGraph extends BaseGraph {
     return graphNode
   }
 
-  clear () {
-    if (this.currNode) {
-      this.canvas.remove(this.currNode)
-      this.currNode = null
-    }
+  clearDirty () {
+    this.clearStatus()
 
     if (this.nullNode) {
       this.nullNode.remove()
     }
   }
 
-  drawCurrNode (node) {
-    if (!this.currNode) {
-      this.currNode = new fabric.Circle({
+  clearStatus (status) {
+    if (status && this.statusNode[status]) {
+      this.canvas.remove(this.statusNode[status])
+      this.statusNode[status] = null
+    } else {
+      for (let k in this.statusNode) {
+        if (this.statusNode[k]) {
+          this.canvas.remove(this.statusNode[k])
+          this.statusNode[k] = null
+        }
+      }
+    }
+  }
+  drawNodeStatus (node, status) {
+    if (this.statusNode[status] === undefined) return
+    if (this.statusNode[status]) {
+      let snode = this.statusNode[status]
+      this.move(snode, {left: node.pos.x,  top: node.pos.y})
+    } else {
+      let snode = new fabric.Circle({
         radius: 20,
-        strokeWidth: 1,
+        strokeWidth: 2,
         fill: '',
-        stroke: 'yellow',
+        stroke: this.statusColor[status],
         left: node.pos.x,
         top: node.pos.y,
         originX: 'center',
         originY: 'center'
       })
-      this.canvas.add(this.currNode)
-      this.currNode.moveTo(0)
+      this.canvas.add(snode)
+      snode.moveTo(0)
       this.canvas.renderAll()
-    } else {
-      this.currNode.animate('left', node.pos.x, {
-        onChange: this.canvas.renderAll.bind(this.canvas),
-        duration: 200
-      })
-
-      this.currNode.animate('top', node.pos.y, {
-        onChange: this.canvas.renderAll.bind(this.canvas),
-        duration: 200
-      })
+      this.statusNode[status] = snode
     }
-    this.currNode.__key = node.key
   }
 
   findGraphNode (node) {

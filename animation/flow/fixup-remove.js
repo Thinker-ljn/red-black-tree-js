@@ -113,55 +113,59 @@ class BsBslBsr extends Base {
 }
 
 class BsRdBs extends Base {
-  constructor (tree, currNode, childKey) {
+  constructor (tree, currNode, siblingKey) {
     super(tree, currNode)
-    this.next = 'setRedSibling'
-    this.rotateDirection = childKey  // siblingNode
-  }
-
-  setRedSibling () {
-    this.next = 'setBlackSibling'
-    return this.dye('red', 'sibling')
+    this.next = 'setBlackSiblingChild'
+    this.rotateDirection = siblingKey  // siblingNode
+    this.childKey = siblingKey === 'left' ? 'left' : 'right'
   }
 
   setBlackSiblingChild () {
+    this.next = 'setRedSibling'
+    return this.dye('black', 'sibling-' + this.childKey)
+  }
+
+  setRedSibling () {
     this.next = 'startRotate'
-    return this.dye('black', )
+    return this.dye('red', 'sibling')
   }
 
   startRotate () {
     this.next = 'finished'
-    return this.rotate()
+    return this.rotate('sibling')
   }
 }
 
 class BsRs extends Base {
-  constructor (tree, currNode, childKey) {
+  constructor (tree, currNode, siblingKey) {
     super(tree, currNode)
-    this.next = 'setSibling'
-    this.rotateDirection = childKey === 'left' ? 'right' : 'left' // siblingNode
+    this.next = 'setParentColorToSibling'
+    this.rotateDirection = siblingKey === 'left' ? 'right' : 'left' // siblingNode
+    this.childKey = siblingKey
   }
 
-  setSibling () {
+  setParentColorToSibling () {
     this.next = 'setBlackParent'
-    return this.dye(node.parent.color, 'sibling')
+    return this.dye(this.currNode.parent.color, 'sibling')
   }
 
   setBlackParent () {
-    this.next = 'setBlackSiblingLeft'
+    this.next = 'setBlackSiblingChild'
     return this.dye('black', 'parent')
   }
 
-  setBlackSiblingLeft () {
+  setBlackSiblingChild () {
     this.next = 'startRotate'
-    return this.dye('black', siblingNode.left)
+    return this.dye('black', 'sibling-' + this.childKey)
   }
   startRotate () {
-    this.next = 'finished'
-//this.rightRotate(node.parent)
+    this.next = 'setCurrRoot'
+    return this.rotate('parent')
+  }
 
-//node = this.root
-    return this.rotate()
+  setCurrRoot () {
+    this.next = 'finished'
+    return this.setCurr('root')
   }
 }
 

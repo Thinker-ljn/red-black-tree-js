@@ -10,6 +10,8 @@ function Graph (tree) {
   this.canvas.setHeight(document.body.clientHeight)
   this.canvas.setWidth(document.body.clientWidth)
 
+  this.startX = 40
+  this.startY = 40
   this.intervalX = 20
   this.intervalY = 60
   this.origin = {
@@ -59,17 +61,10 @@ Graph.prototype = {
   getTraversalCallback () {
     let prevLeft = null
     let width = this.canvas.width
-    let intervalX = this.intervalX
-    let intervalY = this.intervalY
+    let {intervalX, intervalY, startX, startY} = this
     return function (node, deep) {
-      let x
-      if (prevLeft === null) {
-        x = intervalX
-      } else {
-        x = prevLeft + intervalX
-      }
-
-      let y = deep * intervalY
+      let x = prevLeft === null ? startX : prevLeft + intervalX
+      let y = deep > 1 ? deep * intervalY : startY
 
       node.pos = {
         x: x,
@@ -84,10 +79,6 @@ Graph.prototype = {
     let objs = this.canvas._objects
     for (let i = 0; i < objs.length; i++) {
       let o = objs[i]
-      // if (o.constructor.name === 'GraphArrow') {
-      //   console.log("================")
-      //   console.log(`arrow: 【 ${o.__pnode.key} --- ${o.__cnode.key} 】`)
-      // }
 
       if (o.constructor.name === 'GraphNode') {
         console.log("")

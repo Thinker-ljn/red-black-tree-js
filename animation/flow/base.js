@@ -22,6 +22,8 @@ const relationMap = {
   insert: '插入节点',
   root: '根节点',
   sibling: '当前节点的兄弟节点',
+  'sibling-left': '当前节点的兄弟节点的左节点',
+  'sibling-right': '当前节点的兄弟节点的右节点',
   left: '当前节点的左子节点',
   right: '当前节点的右子节点'
 }
@@ -79,7 +81,7 @@ class Base {
 
     if (!node) node = this.relationParse(relation)
 
-    if (!msg) msg = `将当前节点${relationMap[relation]}染成${relationMap[color]}`
+    if (!msg) msg = `将${relationMap[relation]}染成${relationMap[color]}`
 
     return this.genStep('dye', {node: node, color: color}, msg)
   }
@@ -106,6 +108,8 @@ class Base {
       case 'uncle': return uncle(this.currNode)
       case 'grandpa': return grandpa(this.currNode)
       case 'sibling': return sibling(this.currNode)
+      case 'sibling-left': return sibling(this.currNode)['left']
+      case 'sibling-right': return sibling(this.currNode)['right']
     }
   }
 }
