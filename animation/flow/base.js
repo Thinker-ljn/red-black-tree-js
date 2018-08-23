@@ -49,7 +49,7 @@ class Base {
     return step
   }
 
-  setCurr (relation) {
+  setCurr (relation, msg = '') {
     if (relation instanceof Node) {
       this.currNode = relation
       relation = 'insert'
@@ -68,7 +68,7 @@ class Base {
       this.currNode = currNode
     }
 
-    let msg = `${compareMap[relation] || ''}将${relationMap[relation]}设为新当前节点`
+    if (!msg) msg = `${compareMap[relation] || ''}将${relationMap[relation]}设为新当前节点`
     return this.genStep('setCurr', {node: this.currNode}, msg)
   }
 

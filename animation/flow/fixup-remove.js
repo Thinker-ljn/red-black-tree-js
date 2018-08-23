@@ -21,7 +21,9 @@ class Fixup extends Base {
 
   setCurrWhich () {
     this.next = 'start'
-    return this.setCurr(this.which)
+    let which = this.which === 'left' ? '左' : '右'
+    let msg = `被删除节点是其原父节点的${which}节点, 设置其原父节点的现${which}节点为当前节点, 开始调整`
+    return this.setCurr(this.which, msg)
   }
 
   start () {

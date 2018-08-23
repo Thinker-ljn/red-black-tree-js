@@ -37,6 +37,7 @@ class AnimationGraph extends BaseGraph {
 
     if (this.nullNode) {
       this.nullNode.remove()
+      this.nullNode = null
     }
   }
 
