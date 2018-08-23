@@ -8,14 +8,20 @@ import {
 } from '../../lib/utils.js'
 
 class Fixup extends Base {
-  constructor (tree, currNode) {
+  constructor (tree, currNode, which) {
     super(tree, currNode)
-    this.next = 'start'
+    this.next = 'setCurrWhich'
+    this.which = which
 
     this.Rs = Rs
     this.BsBslBsr = BsBslBsr
     this.BsRdBs = BsRdBs  // d diff side, s same side
     this.BsRs = BsRs
+  }
+
+  setCurrWhich () {
+    this.next = 'start'
+    return this.setCurr(this.which)
   }
 
   start () {
@@ -48,15 +54,19 @@ class Fixup extends Base {
     let siblingNode = sibling(this.currNode)
     let sColor = siblingNode ? siblingNode.color : 'black'
 
-    let childKey = isLeftChild(siblingNode) ? 'left' : 'right'
+    let childKey = isLeftChild(this.currNode) ? 'right' : 'left'
     if (sColor === 'red') return ['Rs', '兄弟节点为红色，属于情况一，需要调整', childKey]
+
+    if (!siblingNode) {
+      return ['BsBslBsr', '没有兄弟节点，属于情况二，需要调整', childKey]
+    }
 
     if (isBlack(siblingNode.left) && isBlack(siblingNode.right)) {
       return ['BsBslBsr', '兄弟节点为黑色，子节点也都为黑色，属于情况二，需要调整', childKey]
     } else if (isBlack(siblingNode.right)){
-      return ['BsRslBsr', '兄弟节点为黑色，左子节点为红色，右子节点为黑色，属于情况三，需要调整', childKey]
+      return ['BsRdBs', '兄弟节点为黑色，左子节点为红色，右子节点为黑色，属于情况三，需要调整', childKey]
     } else {
-      return ['BsRsr', '兄弟节点为黑色，右子节点为红色，属于情况四，需要调整', childKey]
+      return ['BsRs', '兄弟节点为黑色，右子节点为红色，属于情况四，需要调整', childKey]
     }
   }
 }

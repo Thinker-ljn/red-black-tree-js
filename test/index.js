@@ -4,8 +4,8 @@ import tree from '../index.js'
 import dataGenerate from './data-generate.js'
 let graph = new Graph(tree)
 window.graph = graph
-let nums = 4
-let isRandom = true
+let nums = 40
+let isRandom = false
 let datas = dataGenerate(nums, isRandom)
 init()
 let animation
@@ -30,6 +30,7 @@ function nextBtn (action = 'insert') {
   if (!datas.length) return
   if (!animation) {
     animation = new Animation(graph)
+    window.anm = animation
     animation[action](getNextKey())
   } else {
     if (animation.flow.next === 'finished') {

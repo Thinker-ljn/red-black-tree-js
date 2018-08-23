@@ -52,7 +52,18 @@ class Base {
       this.currNode = relation
       relation = 'insert'
     } else {
-      this.currNode = this.relationParse(relation)
+      let currNode = this.relationParse(relation)
+      if (!currNode) {
+        currNode = new Node
+        let x = relation === 'left' ? -20 : 20
+        currNode.pos = {
+          x: this.currNode.pos.x + x,
+          y: this.currNode.pos.y + 60
+        }
+        currNode.parent = this.currNode
+        this.currNode[relation] = currNode
+      }
+      this.currNode = currNode
     }
 
     let msg = `${compareMap[relation] || ''}将${relationMap[relation]}设为新当前节点`

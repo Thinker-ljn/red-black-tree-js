@@ -65,18 +65,20 @@ class RemoveFlow extends Base {
   }
 
   isHasChild (node) {
+    this.whichRemove = node.which
+    this.currNode = node.parent
     if (node.left && node.right) {
       return this.findBeforeNode(node)
     } else if (node.left) {
-      this.next = 'setChildOfBnCurr'
-      this.currNode = node.left
+      this.next = 'fixup'
+      this.bNode = node
       return this.genStep('remove', {dNode: node, child: node.left}, '待删除节点只有左子节点，直接删除，并用左子节点替代自己')
     } else if (node.right) {
-      this.next = 'setChildOfBnCurr'
-      this.currNode = node.right
+      this.next = 'fixup'
+      this.bNode = node
       return this.genStep('remove', {dNode: node, child: node.right}, '待删除节点只有右子节点，直接删除，并用右子节点替代自己')
     } else {
-      this.next = 'finished'
+      this.next = 'fixup'
       return this.genStep('remove', {dNode: node}, '待删除节点没有子节点，直接删除')
     }
   }
@@ -94,8 +96,9 @@ class RemoveFlow extends Base {
     this.next = 'copyBnToDn'
     this.bNode = bNode
     this.removeNode = node
-    this.currNode = null
-    if (bNode.left) this.currNode = bNode.left
+
+    this.currNode = bNode.parent
+    this.whichRemove = bNode.which
     return this.genStep('findBeforeNode', {bNode: bNode, lines: lines}, '待删除节点有两个子节点，需找出其前置节点，前置节点是待删除节点的左子节点的最右子孙节点')
   }
 
@@ -106,29 +109,29 @@ class RemoveFlow extends Base {
 
   removeBeforeNode () {
     if (this.currNode) {
-      this.next = 'setChildOfBnCurr'
+      this.next = 'fixup'
       return this.genStep(
         'removeBeforeNode',
         {bNode: this.bNode, dNode: this.removeNode},
         '删除前置节点，用子节点代替它位置, 并把它的颜色附在它子节点上，此时子节点有双重颜色'
       )
     } else {
-      this.next = 'finished'
+      this.next = 'fixup'
       return this.genStep('removeBeforeNode', {bNode: this.bNode, dNode: this.removeNode}, '删除前置节点，没有子节点，删除完成')
     }
   }
 
-  setChildOfBnCurr () {
-    this.next = 'fixup'
-    return this.genStep('setCurr', {node: this.currNode}, '把子节点设置为当前节点')
-  }
+  // setChildCurr (which) {
+  //   this.next = 'fixup'
+  //   return this.setCurr(which, '把子节点设置为当前节点')
+  // }
 
   fixup () {
     if (isRed(this.bNode)) {
       this.next = 'finished'
       return this.genStep('finished', {}, '被删除节点是红色节点，无需调整颜色，删除完成')
     }
-    if (!this.fix) this.fix = new Fixup(this.tree, this.currNode)
+    if (!this.fix) this.fix = new Fixup(this.tree, this.currNode, this.whichRemove)
 
     let step = this.fix.execNext()
 

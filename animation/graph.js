@@ -4,6 +4,7 @@ import Node from '../lib/node.js'
 class AnimationGraph extends BaseGraph {
   constructor (tree) {
     super(tree)
+    this.nullNode = null
   }
 
   move (node, props) {
@@ -23,10 +24,14 @@ class AnimationGraph extends BaseGraph {
     return graphNode
   }
 
-  clearCurr () {
+  clear () {
     if (this.currNode) {
       this.canvas.remove(this.currNode)
       this.currNode = null
+    }
+
+    if (this.nullNode) {
+      this.nullNode.remove()
     }
   }
 

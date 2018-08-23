@@ -14,7 +14,7 @@ class Step {
     }
 
     if (this.nextEnd) {
-      graph.clearCurr()
+      graph.clear()
     }
   }
 
@@ -28,7 +28,12 @@ class Step {
   }
 
   setCurr (graph) {
-    graph.drawCurrNode(this.payload.node)
+    let node = this.payload.node
+    if (node.key === null) {
+      let graphNode = graph.drawNode(node)
+      graph.nullNode = graphNode
+    }
+    graph.drawCurrNode(node)
   }
 
   dye (graph) {
@@ -89,6 +94,11 @@ class Step {
 
   remove (graph) {
     let {dNode, child} = this.payload
+    this._remove(graph, dNode, child)
+    dNode.graph.remove()
+    this.doAnimation(graph)
+  }
+  _remove (graph, dNode, child) {
     if (dNode.parent) {
       let parent = dNode.parent
       let which = dNode.which
@@ -104,20 +114,12 @@ class Step {
     } else {
       graph.tree.root = child || null
     }
-    dNode.graph.remove()
-    this.doAnimation(graph)
   }
-
   removeBeforeNode (graph) {
     let {bNode, dNode} = this.payload
     let objects = graph.canvas._objects
-    let beforeGraphNode = null
-    let childGraphNode = null
     let bChild = bNode.left ? bNode.left : bNode.right
-    let bParent = bNode.parent
-    let which = bParent.left === bNode ? 'left' : 'right'
-    bParent[which] = bChild
-    if (bChild) bChild.parent = bParent
+
 
     for (let i = 0; i < objects.length; i++) {
       let object = objects[i]
@@ -128,36 +130,37 @@ class Step {
       if (object.__type === 'beforeNode') {
         graph.canvas.remove(object)
       }
-
-      if (object.__value === bNode.key) {
-        beforeGraphNode = object
-      }
-
-      if (bChild && object.__value === bChild.key) {
-        childGraphNode = object
-      }
     }
 
-    if (childGraphNode) {
-      let line1 = graph.findGraphLine(bParent, bNode)
-      let line2 = graph.findGraphLine(bNode, bChild)
-      line1.__cnodeKey = bChild.key
-      graph.canvas.remove(line2)
+    this._remove(graph, bNode, bChild)
+    bNode.graph.remove()
+    this.doAnimation(graph)
 
-      let [circle, text] = beforeGraphNode._objects
-      circle.set({fill: '#999', stroke: circle.fill})
-      graph.move(circle, {
-        radius: 18
-      })
+    // let beforeGraphNode = bNode.graph
+    // if (bChild) {
+    //   let bParent = bNode.parent
+    //   let which = bNode.which
+    //   bParent[which] = bChild
+    //   bChild.parent = bParent
 
-      beforeGraphNode.remove(text)
-      beforeGraphNode.__value = bChild.key
-      beforeGraphNode.__type = 'bNode'
-      this.doAnimation(graph)
-    } else {
-      let line3 = graph.findGraphLine(bParent, bNode)
-      graph.canvas.remove(beforeGraphNode, line3)
-    }
+    //   bChild.graph.__parent = bParent.graph
+
+    //   let arrow = graph.drawArrow(bParent, bChild)
+    //   bChild.graph.setRelation(arrow)
+
+    //   let [circle, text] = beforeGraphNode._objects
+    //   circle.set({fill: '#999', stroke: circle.fill})
+    //   graph.move(circle, {
+    //     radius: 18
+    //   })
+
+    //   beforeGraphNode.remove(text)
+    //   beforeGraphNode.__value = bChild.key
+    //   beforeGraphNode.__type = 'bNode'
+    // } else {
+    //   let line3 = graph.findGraphLine(bParent, bNode)
+    //   graph.canvas.remove(beforeGraphNode, line3)
+    // }
   }
 
   rotate (graph) {
