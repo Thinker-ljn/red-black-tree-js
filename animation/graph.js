@@ -98,10 +98,10 @@ class AnimationGraph extends BaseGraph {
     let bn = null
     for (let i = 0; i < objects.length; i++) {
       let object = objects[i]
-      if (object.__type === 'line' && lines[object.__pcKey]) {
-        object.set({stroke: 'blue'})
+      if (object.constructor.name === 'GraphArrow' && lines[object.__pcKey]) {
+        object.changeColor('blue')
       }
-      if (object.__type === 'node' && object.__value === bNode.key) {
+      if (object.__node === bNode) {
         bn = new fabric.Circle({
           radius: 18,
           strokeWidth: 1,

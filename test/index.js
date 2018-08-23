@@ -4,10 +4,10 @@ import tree from '../index.js'
 import dataGenerate from './data-generate.js'
 let graph = new Graph(tree)
 window.graph = graph
-let nums = 35
-let isRandom = false
+let nums = 4
+let isRandom = true
 let datas = dataGenerate(nums, isRandom)
-
+init()
 let animation
 
 function init () {
@@ -40,8 +40,8 @@ function nextBtn (action = 'insert') {
 }
 function bindButton (id, fn) {
   document.getElementById(id).addEventListener('click', function (e) {
-    fn('insert')
-    // fn('remove')
+    // fn('insert')
+    fn('remove')
   }, false)
 }
 

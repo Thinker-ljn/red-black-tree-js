@@ -2,8 +2,7 @@ import Base from './base.js'
 import {
   isLeftChild,
   isBlack,
-  setRed,
-  setBlack,
+  isRed,
   sibling,
   grandpa
 } from '../../lib/utils.js'
@@ -15,14 +14,14 @@ class Fixup extends Base {
 
     this.Rs = Rs
     this.BsBslBsr = BsBslBsr
-    this.BsRslBsr = BsRslBsr
-    this.BsRsr = BsRsr
+    this.BsRdBs = BsRdBs  // d diff side, s same side
+    this.BsRs = BsRs
   }
 
   start () {
     if (isRed(this.currNode)) {
       this.next = 'finished'
-      return this.dye('red', '被删除节点是黑色节点，当前节点为红色，直接染黑')
+      return this.dye('black', '被删除节点是黑色节点，当前节点为红色，直接染黑')
     } else {
       let [next, msg, childKey] = this.getFixWay()
       this.next = next

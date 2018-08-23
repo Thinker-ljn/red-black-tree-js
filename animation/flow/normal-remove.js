@@ -70,14 +70,14 @@ class RemoveFlow extends Base {
     } else if (node.left) {
       this.next = 'setChildOfBnCurr'
       this.currNode = node.left
-      return this.genStep('remove', {node: node, child: node.left}, '待删除节点只有左子节点，直接删除，并用左子节点替代自己')
+      return this.genStep('remove', {dNode: node, child: node.left}, '待删除节点只有左子节点，直接删除，并用左子节点替代自己')
     } else if (node.right) {
       this.next = 'setChildOfBnCurr'
       this.currNode = node.right
-      return this.genStep('remove', {node: node, child: node.right}, '待删除节点只有右子节点，直接删除，并用右子节点替代自己')
+      return this.genStep('remove', {dNode: node, child: node.right}, '待删除节点只有右子节点，直接删除，并用右子节点替代自己')
     } else {
       this.next = 'finished'
-      return this.genStep('remove', {node: node}, '待删除节点没有子节点，直接删除')
+      return this.genStep('remove', {dNode: node}, '待删除节点没有子节点，直接删除')
     }
   }
 

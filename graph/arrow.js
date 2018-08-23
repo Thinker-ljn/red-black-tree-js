@@ -20,6 +20,10 @@ class GraphArrow extends FabricLine {
     this.setTr()
   }
 
+  get __pcKey () {
+    return this.__pnode.key + '-' + this.__cnode.key
+  }
+
   setTr () {
     let {x1, y1, x2, y2} = this
     let tr = new fabric.Triangle({
@@ -90,6 +94,8 @@ class GraphArrow extends FabricLine {
     this.changeParent(cnode)
     this.changeChild(pnode)
   }
+
+
   move (props) {
     for (let key in props) {
       this.animate(key, props[key], {
@@ -100,6 +106,29 @@ class GraphArrow extends FabricLine {
         duration: 200
       })
     }
+  }
+
+  remove () {
+    for (let k of ['__cnode', '__pnode']) {
+      let node = this[k].graph
+      if (!node) continue
+      for (let k of ['parent', 'left', 'right']) {
+        if (node[`__${k}Arrow`] === this) {
+          node[`__${k}Arrow`] = null
+          node.__node[k] = null
+        }
+      }
+    }
+    this.canvas.remove(this, this.tr)
+  }
+
+  changeColor (color) {
+    this.set({
+      stroke: color
+    })
+    this.tr.set({
+      fill: color
+    })
   }
 }
 

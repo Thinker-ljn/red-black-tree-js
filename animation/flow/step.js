@@ -67,29 +67,6 @@ class Step {
     this.doAnimation(graph)
   }
 
-  remove (graph) {
-    let {node, child} = this.payload
-    if (node.parent) {
-      let p = node.parent
-      let which = p.left === node ? 'left' : 'right'
-      if (child) {
-        p[which] = child
-        child.parent = p
-
-        let line1 = graph.findGraphLine(p, node)
-        line1.__cnodeKey = child.key
-        graph.removeGraphLine(node, child)
-        graph.removeGraphNode(child)
-      }
-    } else {
-      graph.tree.root = child
-
-      graph.removeGraphLine(node, child)
-      graph.removeGraphNode(child)
-    }
-    this.doAnimation(graph)
-  }
-
   findBeforeNode (graph) {
     let {bNode, lines} = this.payload
     graph.drawBeforeNode(bNode, lines)
@@ -97,59 +74,37 @@ class Step {
 
   copyBnToDn (graph) {
     let {bNode, dNode} = this.payload
-    let bn = null
-    let dn = null
-    let objects = graph.canvas._objects
-    for (let i = 0; i < objects.length; i++) {
-      let object = objects[i]
-      if (object.__type === 'node' && object.__value === bNode.key) {
-        bn = object
-      }
+    let bn = bNode.graph
+    let dn = dNode.graph
 
-      if (object.__type === 'node' && object.__value === dNode.key) {
-        dn = object
-      }
-    }
     dNode.key = bNode.key
-    let text = new fabric.Text(bNode.key + '', {
-      left: bn.left,
-      top: bn.top,
-      fontSize: 10,
-      fill: '#fff',
-      originX: 'center',
-      originY: 'center'
+    dn.text.set({
+      text: bNode.key + '',
+      left: bn.left - dn.left,
+      top: bn.top - dn.top
     })
-    text.__type = 'beforeText'
-    graph.canvas.add(text)
-    graph.move(text, {left: dn.left, top: dn.top})
-    let [dc, dt] = dn._objects
-    dt.set({fill: dc.fill})
+    dn.text.moveTo(graph.canvas._objects.length)
+    graph.move(dn.text, {left: 0, top: 0})
   }
 
   remove (graph) {
-    let {node, child} = this.payload
+    let {dNode, child} = this.payload
+    if (dNode.parent) {
+      let parent = dNode.parent
+      let which = dNode.which
+      if (child) {
+        parent[which] = child
+        child.parent = parent
 
-    let parent = node.parent
-    let which = parent.left === node ? 'left' : 'right'
-    parent[which] = child
-    if (child) {
-      child.parent = parent
-      let line1 = graph.findGraphLine(parent, node)
-      let line2 = graph.findGraphLine(node, child)
-      line1.__cnodeKey = child.key
-      graph.canvas.remove(line2)
+        child.graph.__parent = parent.graph
 
-      let graphNode = graph.findGraphNode(node)
-      let [circle, text] = graphNode._objects
-      circle.set({fill: '#999', stroke: circle.fill})
-      graph.move(circle, {
-        radius: 18
-      })
-
-      graphNode.remove(text)
-      graphNode.__value = child.key
-      graphNode.__type = 'bNode'
+        let arrow = graph.drawArrow(parent, child)
+        child.graph.setRelation(arrow)
+      }
+    } else {
+      graph.tree.root = child || null
     }
+    dNode.graph.remove()
     this.doAnimation(graph)
   }
 
@@ -166,16 +121,12 @@ class Step {
 
     for (let i = 0; i < objects.length; i++) {
       let object = objects[i]
-      if (object.stroke === 'blue') {
-        object.set({stroke: '#fff'})
+      if (object.constructor.name === 'GraphArrow') {
+        object.changeColor('#fff')
       }
 
-      if (object.__type === 'beforeNode' || object.__type === 'beforeText') {
+      if (object.__type === 'beforeNode') {
         graph.canvas.remove(object)
-      }
-
-      if (object.__type === 'node' && object.__value === dNode.key) {
-        object._objects[1].set({fill: '#fff'})
       }
 
       if (object.__value === bNode.key) {

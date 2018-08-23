@@ -3,7 +3,7 @@ let FabricNode = fabric.Group
 function getObjects ({key, pos, color}) {
   let circle = new fabric.Circle({
     radius: 15,
-    // fill: color || '#999',
+    fill: color || '#999',
     strokeWidth: 1,
     stroke: '#fff',
     originX: 'center',
@@ -69,6 +69,18 @@ class GraphNode extends FabricNode {
     this.circle.set({
       fill: color
     })
+  }
+
+  remove () {
+    this.__node.graph = null
+
+    for (let k of ['__parentArrow', '__leftArrow', '__rightArrow']) {
+      if (this[k]) {
+        this[k].remove()
+      }
+    }
+
+    this.canvas.remove(this)
   }
 }
 

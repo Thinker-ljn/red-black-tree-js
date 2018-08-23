@@ -44,42 +44,6 @@ Graph.prototype = {
     arrow.moveTo(0)
     return arrow
   },
-  drawCircle (value, pos, color) {
-    let circle = new fabric.Circle({
-      radius: 15,
-      fill: color || '#999',
-      strokeWidth: 1,
-      stroke: '#fff',
-      originX: 'center',
-      originY: 'center'
-    })
-
-    let text = new fabric.Text(value + '', {
-      fontSize: 10,
-      fill: '#fff',
-      originX: 'center',
-      originY: 'center'
-    })
-
-    let group = new fabric.Group([ circle, text ], {
-      left: pos.x,
-      top: pos.y,
-      originX: 'center',
-      originY: 'center'
-    })
-    group.__value = value
-    group.__type = 'node'
-    // group.on('selected', () => {
-    //   this.doRemove(group.value)
-    // })
-    group.__dye = function (color) {
-      circle.set({
-        fill: color
-      })
-    }
-    this.canvas.add(group)
-    return group
-  },
   generateTreeData () {
     let callback = this.getTraversalCallback()
     this.tree.traversal('inorder', callback)
