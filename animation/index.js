@@ -3,26 +3,30 @@ import RemoveFlow from './flow/normal-remove.js'
 
 class Animation {
   constructor (graph) {
-    this.interval = 1000
+    this.interval = graph.interval + 500
+    this.isAutoPlay = true
     this.graph = graph
     this.steps = []
-    this.msg = ''
-    this.flow = {}
+    this.flow = null
+
+    this.inFlow = false
+    this._msg = ''
+    this.msgDom = document.getElementById('msg')
   }
 
   next () {
+    if (!this.flow || !this.inFlow) return
     let step = this.flow.execNext()
     if (!step) return false
+    if (step.nextEnd) {
+      this.inFlow = false
+      window.clearInterval(this.timer)
+    }
 
     this.steps.push(step)
     step.exec(this.graph)
 
-    if (step.msg) {
-      this.msg += `【${step.action}】: ${step.msg}</br>`
-      let msgDom = document.getElementById('msg')
-      msgDom.innerHTML = this.msg
-      msgDom.scrollTop = msgDom.scrollHeight
-    }
+    this.msg = `【${step.action}】: ${step.msg}</br>`
     this.graph.renderAll()
   }
 
@@ -35,14 +39,28 @@ class Animation {
   }
 
   insert (key) {
+    this.inFlow = true
     this.flow = new InsertFlow(this.graph.tree, key)
-    if (this.msg) this.msg += '</br></br>'
+    this.msg = `</br>开始插入【${key}】</br></br>`
+    if (this.isAutoPlay) {
+      this.startPlay()
+    }
   }
 
   remove (key) {
+    this.inFlow = true
     this.flow = new RemoveFlow(this.graph.tree, key)
-    if (this.msg) this.msg += `</br></br>`
-    else this.msg += `删除【${key}】</br></br>`
+    this.msg = `</br>开始删除【${key}】</br></br>`
+  }
+
+  set msg (m) {
+    this._msg += m
+    this.msgDom.innerHTML = this._msg
+    this.msgDom.scrollTop = this.msgDom.scrollHeight
+  }
+
+  startPlay () {
+    this.timer = window.setInterval(this.next.bind(this), this.interval)
   }
 }
 

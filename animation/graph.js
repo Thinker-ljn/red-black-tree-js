@@ -25,7 +25,7 @@ class AnimationGraph extends BaseGraph {
     for (let key in props) {
       graphNode.animate(key, props[key], {
         onChange: this.canvas.renderAll.bind(this.canvas),
-        duration: 200
+        duration: this.interval
       })
     }
 

@@ -11,11 +11,20 @@
 <body>
     <canvas id="canvas"></canvas>
     <div class="function-area">
-        <div class="nodes"></div>
         <div id="msg" class="msgs"></div>
         <div class="menu">
-            <button id="next">下一步</button>
-            <button id="insert">插入数据</button>
+            <div class="row">
+                <label><input class="autoplay" name="autoplay" type="radio" value="1" checked/>自动播放</label>
+                <label><input class="autoplay" name="autoplay" type="radio" value="0" />手动播放</label>
+            </div>
+            <div class="row">
+                <button id="insert">开始插入</button>
+                <button id="remove">开始删除</button>
+            </div>
+            <div class="row">
+                <button id="prev" disabled="true">上一步</button>
+                <button id="next" disabled="true">下一步</button>
+            </div>
         </div>
     </div>
 </body>

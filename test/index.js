@@ -3,12 +3,13 @@ import Animation from '../animation/index.js'
 import tree from '../index.js'
 import dataGenerate from './data-generate.js'
 let graph = new Graph(tree)
+let animation = new Animation(graph)
+
 window.graph = graph
 let nums = 40
 let isRandom = false
 let datas = dataGenerate(nums, isRandom)
-init()
-let animation
+// init()
 
 function init () {
   datas.forEach(key => {
@@ -21,31 +22,46 @@ function getNextKey () {
   return window.myKey || datas.shift()
 }
 
-function insertBtn () {
-  let key = datas.shift()
-  if (key) graph.doInsert(key)
+function bindEvent (selectorName, fn, eventName = 'click') {
+  let doms = document.querySelectorAll(selectorName)
+  doms.forEach(function (dom) {
+    dom.addEventListener(eventName, function (e) {
+      fn(e, this)
+    }, false)
+  })
 }
 
-function nextBtn (action = 'insert') {
-  if (!datas.length) return
-  if (!animation) {
-    animation = new Animation(graph)
-    window.anm = animation
-    animation[action](getNextKey())
-  } else {
-    if (animation.flow.next === 'finished') {
-      animation[action](getNextKey())
-    }
-    animation.next()
+function setDomStatus (status) {
+  let disabled = {next: true, prev: true}
+  if (status === 'insert') {
+    disabled = {remove: true}
   }
-}
-function bindButton (id, fn) {
-  document.getElementById(id).addEventListener('click', function (e) {
-    // fn('insert')
-    fn('remove')
-  }, false)
+  if (status === 'remove') {
+    disabled = {insert: true}
+  }
+  document.querySelectorAll('button').forEach(function (dom) {
+    if (disabled[dom.id]) dom.disabled = true
+    else dom.disabled = false
+  })
 }
 
+bindEvent('#next', function () {
+  animation.next()
+  if (!animation.inFlow) {
+    setDomStatus()
+  }
+})
 
-bindButton('insert', insertBtn)
-bindButton('next', nextBtn)
+bindEvent('.autoplay', function (e, dom) {
+  animation.isAutoPlay = !animation.isAutoPlay
+}, 'change')
+let as = ['insert', 'remove']
+as.forEach((action) => {
+  bindEvent('#' + action, function () {
+    setDomStatus(action)
+    let key = getNextKey()
+    animation[action](key)
+    // let key = datas.shift()
+    // if (key) graph.doInsert(key)
+  })
+})

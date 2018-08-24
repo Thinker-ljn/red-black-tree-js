@@ -11,6 +11,7 @@ class GraphArrow extends FabricLine {
       originX: 'center',
       originY: 'center'
     })
+    console.log(x1, y1, x2, y2)
     this.r = 15
     this.__pnode = pnode
     this.__cnode = cnode
@@ -44,7 +45,6 @@ class GraphArrow extends FabricLine {
   setAngle () {
     let {x1, y1, x2, y2} = this
     let angle = Math.atan2((y2 - y1), (x2 - x1)) / Math.PI * 180
-
     let [x, y] = this.getTrPos()
 
     this.tr.set({
@@ -59,7 +59,7 @@ class GraphArrow extends FabricLine {
     let x = Math.abs(x2 - x1)
     let y = Math.abs(y2 - y1)
     let z = Math.sqrt(x * x + y * y)
-
+    if (z === 0) return [x2, y2]
     let rate = (z - this.r - 3) / z
 
     return [(x2 - x1) * rate + x1, (y2 - y1) * rate + y1]
@@ -96,14 +96,14 @@ class GraphArrow extends FabricLine {
   }
 
 
-  move (props) {
+  move (props, interval) {
     for (let key in props) {
       this.animate(key, props[key], {
         onChange: () => {
           this.canvas.renderAll.bind(this.canvas)
           this.setAngle()
         },
-        duration: 200
+        duration: interval || 200
       })
     }
   }

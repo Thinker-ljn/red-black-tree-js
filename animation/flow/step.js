@@ -24,25 +24,13 @@ class Step {
 
   preInsert (graph) {
     let {which, node, parent} = this.payload
-    let pos = {
-      x: graph.startX,
-      y: graph.startY
-    }
-
     if (!parent) {
       graph.tree.root = node
     } else {
       node.parent = parent
       parent[which] = node
-      pos.x = node.parent.pos.x,
-      pos.y = node.parent.pos.y + 60
     }
 
-    if (which === 'left') {
-      pos.x -= 20
-    } else {
-      pos.x += 20
-    }
     if (parent) {
       node.graph.__parent = parent.graph
       let arrow = graph.drawArrow(parent, node)
@@ -171,7 +159,7 @@ class Step {
         let {x: x1, y: y1} = object.__pnode.pos
         let {x: x2, y: y2} = object.__cnode.pos
 
-        object.move({x1, y1, x2, y2})
+        object.move({x1, y1, x2, y2}, graph.interval)
       }
       if (object.constructor.name === 'GraphNode' || object.__type === 'bNode') {
         let {x: left, y: top} = object.__node.pos

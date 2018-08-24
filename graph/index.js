@@ -1,16 +1,17 @@
 import Node from './node.js'
 import Arrow from './arrow.js'
 function Graph (tree) {
+  this.interval = 500
   this.tree = tree
   this.canvas = new fabric.StaticCanvas('canvas', {
     renderOnAddRemove: false,
     backgroundColor: '#999'
   })
 
-  this.canvas.setHeight(document.body.clientHeight)
-  this.canvas.setWidth(document.body.clientWidth)
+  this.canvas.setHeight(window.innerHeight)
+  this.canvas.setWidth(window.innerWidth)
 
-  this.startX = 40
+  this.startX = 80
   this.startY = 40
   this.intervalX = 20
   this.intervalY = 60
@@ -64,7 +65,7 @@ Graph.prototype = {
     let {intervalX, intervalY, startX, startY} = this
     return function (node, deep) {
       let x = prevLeft === null ? startX : prevLeft + intervalX
-      let y = deep > 1 ? deep * intervalY : startY
+      let y = (deep - 1) * intervalY + startY
 
       node.pos = {
         x: x,
