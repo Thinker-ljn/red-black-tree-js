@@ -2,8 +2,8 @@ import Node from './node.js'
 import Arrow from './arrow.js'
 function Graph (tree) {
   this.interval = 500
-  this.tree = tree
-  this.canvas = new fabric.StaticCanvas('canvas', {
+  this.tree = tree // Static
+  this.canvas = new fabric.Canvas('canvas', {
     renderOnAddRemove: false,
     backgroundColor: '#999'
   })

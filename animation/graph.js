@@ -36,8 +36,11 @@ class AnimationGraph extends BaseGraph {
     this.clearStatus()
 
     if (this.nullNode) {
+      let parent = this.nullNode.__node.parent
       this.nullNode.remove()
       this.nullNode = null
+
+      parent.createNullNode()
     }
   }
 

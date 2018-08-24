@@ -1,5 +1,5 @@
+import Node from '../lib/node.js'
 let FabricLine = fabric.Line
-
 class GraphArrow extends FabricLine {
   constructor (pnode, cnode) {
     let {x: x1, y: y1} = pnode.pos
@@ -11,7 +11,7 @@ class GraphArrow extends FabricLine {
       originX: 'center',
       originY: 'center'
     })
-    console.log(x1, y1, x2, y2)
+
     this.r = 15
     this.__pnode = pnode
     this.__cnode = cnode
@@ -110,12 +110,12 @@ class GraphArrow extends FabricLine {
 
   remove () {
     for (let k of ['__cnode', '__pnode']) {
-      let node = this[k].graph
-      if (!node) continue
+      let graphNode = this[k].graph
+      if (!graphNode) continue
       for (let k of ['parent', 'left', 'right']) {
-        if (node[`__${k}Arrow`] === this) {
-          node[`__${k}Arrow`] = null
-          node.__node[k] = null
+        if (graphNode[`__${k}Arrow`] === this) {
+          graphNode[`__${k}Arrow`] = null
+          graphNode.__node[k] = null
         }
       }
     }

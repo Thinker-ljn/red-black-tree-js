@@ -9,7 +9,7 @@ window.graph = graph
 let nums = 40
 let isRandom = false
 let datas = dataGenerate(nums, isRandom)
-// init()
+init()
 
 function init () {
   datas.forEach(key => {
@@ -31,14 +31,20 @@ function bindEvent (selectorName, fn, eventName = 'click') {
   })
 }
 
-function setDomStatus (status) {
-  let disabled = {next: true, prev: true}
-  if (status === 'insert') {
-    disabled = {remove: true}
+function setDomStatus () {
+  let {isAutoPlay, inFlow} = animation
+
+  let show = {}
+  if (isAutoPlay && inFlow) {
+    // all
+  } else if (!isAutoPlay && inFlow) {
+    disabled = {next: true, prev: true}
+  } else if (isAutoPlay && !inFlow) {
+
+  } else {
+
   }
-  if (status === 'remove') {
-    disabled = {insert: true}
-  }
+
   document.querySelectorAll('button').forEach(function (dom) {
     if (disabled[dom.id]) dom.disabled = true
     else dom.disabled = false
@@ -48,7 +54,7 @@ function setDomStatus (status) {
 bindEvent('#next', function () {
   animation.next()
   if (!animation.inFlow) {
-    setDomStatus()
+    // setDomStatus()
   }
 })
 
@@ -58,7 +64,7 @@ bindEvent('.autoplay', function (e, dom) {
 let as = ['insert', 'remove']
 as.forEach((action) => {
   bindEvent('#' + action, function () {
-    setDomStatus(action)
+    // setDomStatus(action)
     let key = getNextKey()
     animation[action](key)
     // let key = datas.shift()

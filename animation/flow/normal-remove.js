@@ -18,7 +18,7 @@ class RemoveFlow extends Base {
   }
 
   isEmpty () {
-    if (!this.tree.root) {
+    if (this.tree.root.key === null) {
       this.next = 'finished' // finished
       return this.genStep('error', {}, '当前树为空，删除出错！')
     } else {
@@ -43,7 +43,7 @@ class RemoveFlow extends Base {
     let cm = {left: '小于', right: '大于'}
     let cn = {left: '左子节点', right: '右子节点'}
 
-    if (this.currNode[child]) {
+    if (this.currNode[child].key !== null) {
       this.next = 'findTarget'
       return this.setCurr(child)
     } else {
@@ -60,7 +60,7 @@ class RemoveFlow extends Base {
 
   isHasChild () {
     let node = this.theNeedRemoveNode
-    if (node.left && node.right) {
+    if (node.left.key !== null && node.right.key !== null) {
       return this.findBeforeNode(node)
     } else {
       return this.remove(node)
@@ -70,8 +70,8 @@ class RemoveFlow extends Base {
   findBeforeNode (node) {
     let bNode = node.left
     let lines = {}
-    if (bNode) lines[node.key + '-' + bNode.key] = true
-    while (bNode && bNode.right) {
+    if (bNode.key !== null) lines[node.key + '-' + bNode.key] = true
+    while (bNode.key !== null && bNode.right.key !== null) {
       lines[bNode.key + '-' + bNode.right.key] = true
       bNode = bNode.right
     }

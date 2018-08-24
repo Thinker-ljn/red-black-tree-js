@@ -22,16 +22,14 @@ class Step {
     graph.drawNode(this.payload.node)
   }
 
-  preInsert (graph) {
+  insert (graph) {
     let {which, node, parent} = this.payload
-    if (!parent) {
+    if (!parent || parent.key === null) {
       graph.tree.root = node
     } else {
       node.parent = parent
       parent[which] = node
-    }
 
-    if (parent) {
       node.graph.__parent = parent.graph
       let arrow = graph.drawArrow(parent, node)
       node.graph.setRelation(arrow)
@@ -65,7 +63,6 @@ class Step {
   remove (graph) {
     let node = this.payload.needRemoveNode
     let objects = graph.canvas._objects
-    let bChild = node.left ? node.left : node.right
 
     for (let i = 0; i < objects.length; i++) {
       let object = objects[i]
@@ -78,19 +75,22 @@ class Step {
       }
     }
 
-    this._remove(graph, node, bChild)
-    node.graph.remove()
+    this._remove(graph, node)
     this.doAnimation(graph)
   }
 
-  _remove (graph, dNode, child) {
-    if (dNode.parent) {
-      let parent = dNode.parent
-      let which = dNode.which
-      if (child) {
-        parent[which] = child
-        child.parent = parent
+  _remove (graph, node) {
+    let child = node.left.key !== null ? node.left : node.right
+    if (node.parent.key !== null) {
+      let parent = node.parent
+      let which = node.which
 
+      parent[which] = child
+      child.parent = parent
+
+      if (child.key === null) {
+        graph.nullNode = graph.drawNode(child)
+      } else {
         child.graph.__parent = parent.graph
 
         let arrow = graph.drawArrow(parent, child)
@@ -99,6 +99,7 @@ class Step {
     } else {
       graph.tree.root = child || null
     }
+    node.graph.remove()
   }
 
   setNeedRemove (graph) {
@@ -109,10 +110,6 @@ class Step {
 
   setCurr (graph) {
     let node = this.payload.node
-    if (node.key === null) {
-      let graphNode = graph.drawNode(node)
-      graph.nullNode = graphNode
-    }
     graph.drawNodeStatus(node, 'curr')
   }
 
@@ -136,8 +133,8 @@ class Step {
       arrow1.changeChild(child)
     }
 
-    if (child) {
-      if (child[direction]) {
+    if (child.key !== null) {
+      if (child[direction].key !== null) {
         child[direction].graph.__parentArrow.changeParent(node)
       }
       arrow2.changeDirection()
@@ -161,7 +158,7 @@ class Step {
 
         object.move({x1, y1, x2, y2}, graph.interval)
       }
-      if (object.constructor.name === 'GraphNode' || object.__type === 'bNode') {
+      if (object.constructor.name === 'GraphNode') {
         let {x: left, y: top} = object.__node.pos
 
         graph.move(object, {left, top})

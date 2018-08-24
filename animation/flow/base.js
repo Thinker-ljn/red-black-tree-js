@@ -55,16 +55,6 @@ class Base {
       relation = 'insert'
     } else {
       let currNode = this.relationParse(relation)
-      if (!currNode) {
-        currNode = new Node
-        let x = relation === 'left' ? -20 : 20
-        currNode.pos = {
-          x: this.currNode.pos.x + x,
-          y: this.currNode.pos.y + 60
-        }
-        currNode.parent = this.currNode
-        this.currNode[relation] = currNode
-      }
       this.currNode = currNode
     }
 
