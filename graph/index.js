@@ -2,24 +2,21 @@ import Node from './node.js'
 import Arrow from './arrow.js'
 function Graph (tree) {
   this.interval = 500
-  this.tree = tree // Static
-  this.canvas = new fabric.Canvas('canvas', {
+  this.tree = tree
+  this.currNode = null
+
+  this.startX = 80
+  this.startY = 40
+  this.intervalX = 20
+  this.intervalY = 60
+
+  this.canvas = new fabric.StaticCanvas('canvas', {
     renderOnAddRemove: false,
     backgroundColor: '#999'
   })
 
   this.canvas.setHeight(window.innerHeight)
   this.canvas.setWidth(window.innerWidth)
-
-  this.startX = 80
-  this.startY = 40
-  this.intervalX = 20
-  this.intervalY = 60
-  this.origin = {
-    x: document.body.clientWidth / 2,
-    y: this.intervalY
-  }
-  this.currNode = null
 }
 
 Graph.prototype = {
@@ -37,14 +34,18 @@ Graph.prototype = {
     this.canvas.add(graphNode)
     if (node.parent) {
       let arrow = this.drawArrow(node.parent, node)
-      graphNode.setRelation(arrow)
     }
     return graphNode
   },
   drawArrow (parent, node) {
     let arrow = new Arrow(parent, node)
+
     this.canvas.add(arrow, arrow.tr)
     arrow.moveTo(0)
+
+    node.graph.__parent = parent.graph
+    node.graph.setRelation(arrow)
+
     return arrow
   },
   generateTreeData () {
@@ -75,7 +76,6 @@ Graph.prototype = {
       prevLeft = x
     }
   },
-
   print () {
     let objs = this.canvas._objects
     for (let i = 0; i < objs.length; i++) {

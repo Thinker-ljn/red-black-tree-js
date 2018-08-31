@@ -30,9 +30,7 @@ class Step {
       node.parent = parent
       parent[which] = node
 
-      node.graph.__parent = parent.graph
-      let arrow = graph.drawArrow(parent, node)
-      node.graph.setRelation(arrow)
+      graph.drawArrow(parent, node)
     }
 
     this.doAnimation(graph)
@@ -91,10 +89,7 @@ class Step {
       if (child.key === null) {
         graph.nullNode = graph.drawNode(child)
       } else {
-        child.graph.__parent = parent.graph
-
-        let arrow = graph.drawArrow(parent, child)
-        child.graph.setRelation(arrow)
+        graph.drawArrow(parent, child)
       }
     } else {
       graph.tree.root = child || null
