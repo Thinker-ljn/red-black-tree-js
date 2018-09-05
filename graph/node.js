@@ -82,10 +82,6 @@ class GraphNode extends FabricNode {
 
     this.canvas.remove(this)
   }
-
-  isNull () {
-    return this.key === null
-  }
 }
 
 export default GraphNode

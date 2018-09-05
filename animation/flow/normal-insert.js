@@ -20,7 +20,7 @@ class InsertFlow extends Base {
   }
 
   isEmpty () {
-    if (this.tree.root.key === null) {
+    if (this.tree.root.isNull) {
       this.next = 'setCurrInsert' // finished
       return this.genStep('insert', {node: this.insertNode}, '当前树为空，直接插入节点')
     } else {
@@ -47,7 +47,7 @@ class InsertFlow extends Base {
     let cn = {left: '左子节点', right: '右子节点'}
     let msg = `待插入节点${cm[which]}当前节点, `
 
-    if (this.currNode[which].key !== null) {
+    if (!this.currNode[which].isNull) {
       this.next = 'compare'
       return this.setCurr(which)
     } else {

@@ -24,7 +24,7 @@ class Step {
 
   insert (graph) {
     let {which, node, parent} = this.payload
-    if (!parent || parent.key === null) {
+    if (!parent || parent.isNull) {
       graph.tree.root = node
     } else {
       node.parent = parent
@@ -78,15 +78,15 @@ class Step {
   }
 
   _remove (graph, node) {
-    let child = node.left.key !== null ? node.left : node.right
-    if (node.parent.key !== null) {
+    let child = !node.left.isNull ? node.left : node.right
+    if (!node.parent.isNull) {
       let parent = node.parent
       let which = node.which
 
       parent[which] = child
       child.parent = parent
 
-      if (child.key === null) {
+      if (child.isNull) {
         graph.nullNode = graph.drawNode(child)
       } else {
         graph.drawArrow(parent, child)
@@ -128,8 +128,8 @@ class Step {
       arrow1.changeChild(child)
     }
 
-    if (child.key !== null) {
-      if (child[direction].key !== null) {
+    if (!child.isNull) {
+      if (!child[direction].isNull) {
         child[direction].graph.__parentArrow.changeParent(node)
       }
       arrow2.changeDirection()
