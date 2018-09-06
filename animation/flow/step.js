@@ -145,7 +145,8 @@ class Step {
 
     let objects = graph.canvas._objects
 
-    let currKey = graph.currNode ? graph.currNode.__key : null
+    let currKey = graph.statusNode.curr ? graph.statusNode.curr.__key : null
+
     for (let i = 0; i < objects.length; i++) {
       let object = objects[i]
       if (object.constructor.name === 'GraphArrow') {
@@ -160,7 +161,7 @@ class Step {
         graph.move(object, {left, top})
 
         if (object.__node.key === currKey) {
-          graph.move(graph.currNode, {left, top})
+          graph.move(graph.statusNode.curr, {left, top})
         }
       }
     }

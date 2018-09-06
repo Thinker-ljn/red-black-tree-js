@@ -13,6 +13,7 @@ class RemoveFlow extends Base {
     this.deleteNode = null
     this.theBeforeNode = null
 
+    this.title = `开始插入【${this.key}】`
     this.fix = null
   }
 
@@ -116,7 +117,7 @@ class RemoveFlow extends Base {
   fixup () {
     if (isRed(this.theBeforeNode)) {
       this.next = 'finished'
-      let step = this.genStep('finished', {}, '被删除节点是红色节点，无需调整颜色，删除完成')
+      let step = this.genStep('finished', {}, '被删除节点是红色节点，无需调整颜色')
       step.nextEnd = true
       return step
     }

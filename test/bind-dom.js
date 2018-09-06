@@ -2,9 +2,13 @@ class Dom {
   constructor (anm) {
     this.state = {
       inFlow: false,
-      isAutoPlay: false,
+      isAutoPlay: true,
       key: ''
     }
+
+    this._msg = ''
+    this.msgDom = document.getElementById('msg')
+
     this.anm = anm
     this.anm.dom = this
     this.doBind()
@@ -59,13 +63,17 @@ class Dom {
   actionDone () {
     this.state.inFlow = false
     this.anm.inFlow = false
+    this.msg = '完成操作<br/>'
     document.querySelector('.ready').classList.remove('hidden')
     document.querySelector('.running').classList.add('hidden')
     document.querySelector('.step-handler').classList.add('hidden')
   }
 
   setAutoPlay (status) {
-    if (status === undefined) status = this.state.isAutoPlay
+    if (status === undefined) {
+      status = this.state.isAutoPlay
+      this.setChecked(status)
+    }
     if (status || !this.state.inFlow) {
       document.querySelector('.step-handler').classList.add('hidden')
     } else {
@@ -74,6 +82,17 @@ class Dom {
 
     this.state.isAutoPlay = status
     this.anm.isAutoPlay = status
+  }
+
+  setChecked (status) {
+    let str = status ? '1' : '0'
+    document.querySelector(`input[type=radio][value="${str}"]`).checked = true
+  }
+
+  set msg (m) {
+    this._msg += m + '<br/>'
+    this.msgDom.innerHTML = this._msg
+    this.msgDom.scrollTop = this.msgDom.scrollHeight
   }
 }
 

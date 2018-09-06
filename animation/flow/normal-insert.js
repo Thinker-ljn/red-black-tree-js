@@ -20,6 +20,7 @@ class InsertFlow extends Base {
       this.next = 'isEmpty'
     }
 
+    this.title = `开始插入【${this.key}】`
     this.fix = null
   }
 

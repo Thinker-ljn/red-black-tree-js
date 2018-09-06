@@ -27,7 +27,10 @@ class Fixup extends Base {
   }
 
   start () {
-    if (isRed(this.currNode)) {
+    if (this.currNode === this.tree.root) {
+      this.next = 'finished'
+      return this.dye('black', '当前节点是根结点，直接染黑')
+    } else if (isRed(this.currNode)) {
       this.next = 'finished'
       return this.dye('black', '被删除节点是黑色节点，当前节点为红色，直接染黑')
     } else {
@@ -39,16 +42,13 @@ class Fixup extends Base {
   }
 
   getNext (before) {
-    if (before === 'BsRs') return 'finished'
-    else {
-      this.currNode = this[this.next].currNode
+    this.currNode = this[this.next].currNode
 
-      this.Rs = Rs
-      this.BsBslBsr = BsBslBsr
-      this.BsRdBs = BsRdBs  // d diff side, s same side
-      this.BsRs = BsRs
-      return 'start'
-    }
+    this.Rs = Rs
+    this.BsBslBsr = BsBslBsr
+    this.BsRdBs = BsRdBs  // d diff side, s same side
+    this.BsRs = BsRs
+    return 'start'
   }
 
   getFixWay () {

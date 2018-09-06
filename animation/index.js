@@ -10,8 +10,6 @@ class Animation {
     this.flow = null
 
     this.inFlow = false
-    this._msg = ''
-    this.msgDom = document.getElementById('msg')
 
     this.dom = null
   }
@@ -23,15 +21,15 @@ class Animation {
     }
     let step = this.flow.execNext()
     if (!step) return false
+
+    this.steps.push(step)
+    step.exec(this.graph)
+    this.dom.msg = `【${step.action}】: ${step.msg}`
+
     if (step.nextEnd) {
       if (this.dom) this.dom.actionDone()
       window.clearInterval(this.timer)
     }
-
-    this.steps.push(step)
-    step.exec(this.graph)
-
-    this.msg = `【${step.action}】: ${step.msg}</br>`
     this.graph.renderAll()
   }
 
@@ -47,25 +45,21 @@ class Animation {
     if (!key) {
       key = this.graph.nodeList.shift()
     }
-
-    this.inFlow = true
     this.flow = new InsertFlow(this.graph.tree, key)
-    this.msg = `</br>开始插入【${key}】</br></br>`
-    if (this.isAutoPlay) {
-      this.startPlay()
-    }
+    this.prepare()
   }
 
   remove (key) {
-    this.inFlow = true
     this.flow = new RemoveFlow(this.graph.tree, key)
-    this.msg = `</br>开始删除【${key}】</br></br>`
+    this.prepare()
   }
 
-  set msg (m) {
-    this._msg += m
-    this.msgDom.innerHTML = this._msg
-    this.msgDom.scrollTop = this.msgDom.scrollHeight
+  prepare () {
+    this.inFlow = true
+    this.dom.msg = this.flow.title
+    if (this.isAutoPlay) {
+      this.startPlay()
+    }
   }
 
   startPlay () {

@@ -78,6 +78,7 @@ class AnimationGraph extends BaseGraph {
       this.canvas.renderAll()
       this.statusNode[status] = snode
     }
+    this.statusNode[status].__key = node.key
   }
 
   findGraphNode (node) {

@@ -36,15 +36,12 @@ class Fixup extends Base {
   }
 
   getNext (before) {
-    if (before === 'SameSideRpbu') return 'finished'
-    else {
-      this.currNode = this[this.next].currNode
+    this.currNode = this[this.next].currNode
 
-      this.Rpru = Rpru
-      this.SameSideRpbu = SameSideRpbu
-      this.DiffSideRpbu = DiffSideRpbu
-      return 'start'
-    }
+    this.Rpru = Rpru
+    this.SameSideRpbu = SameSideRpbu
+    this.DiffSideRpbu = DiffSideRpbu
+    return 'start'
   }
 
   getFixWay () {
@@ -109,18 +106,18 @@ class SameSideRpbu extends Base {
   }
 
   setRedGrandpa () {
-    this.next = 'setCurrGrandpa'
+    this.next = 'startRotate'
     return this.dye('red', 'grandpa')
   }
 
-  setCurrGrandpa () {
-    this.next = 'startRotate'
-    return this.setCurr('grandpa')
-  }
+  // setCurrGrandpa () {
+  //   this.next = 'startRotate'
+  //   return this.setCurr('grandpa')
+  // }
 
   startRotate () {
     this.next = 'finished'
-    return this.rotate()
+    return this.rotate('grandpa')
   }
 }
 

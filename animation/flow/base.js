@@ -78,8 +78,12 @@ class Base {
 
   rotate (relation) {
     let node = this.currNode
-    if (relation) node = this.relationParse(relation)
-    let msg = '以当前节点进行' + (this.rotateDirection === 'left' ? '左' : '右') + '旋'
+    let nodeName = '当前节点'
+    if (relation) {
+      node = this.relationParse(relation)
+      nodeName = relationMap[relation]
+    }
+    let msg = `以${nodeName}进行` + (this.rotateDirection === 'left' ? '左' : '右') + '旋'
     return this.genStep('rotate', {direction: this.rotateDirection, node: node}, msg)
   }
 
