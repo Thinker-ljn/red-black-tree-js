@@ -10,18 +10,25 @@
 </head>
 <body>
     <canvas id="canvas"></canvas>
+    <div class="node-list"></div>
     <div class="function-area">
         <div id="msg" class="msgs"></div>
         <div class="menu">
             <div class="row">
-                <label><input class="autoplay" name="autoplay" type="radio" value="1" checked/>自动播放</label>
-                <label><input class="autoplay" name="autoplay" type="radio" value="0" />手动播放</label>
+                <label><input class="autoplay" name="autoplay" type="radio" value="1"/>自动播放</label>
+                <label><input class="autoplay" name="autoplay" type="radio" value="0" checked/>手动播放</label>
             </div>
             <div class="row">
-                <button id="insert">开始插入</button>
-                <button id="remove">开始删除</button>
+                <div class="ready">
+                    <input id="key" type="text" placeholder="结点key">
+                    <button id="insert">开始插入</button>
+                    <button id="remove">开始删除</button>
+                </div>
+                <div class="running hidden">
+                    正在<span class="running-key"></span>...
+                </div>
             </div>
-            <div class="row">
+            <div class="row step-handler hidden">
                 <button id="prev">上一步</button>
                 <button id="next">下一步</button>
             </div>

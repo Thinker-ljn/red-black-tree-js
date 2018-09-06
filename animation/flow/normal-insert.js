@@ -1,14 +1,24 @@
 import Node from '../../lib/node.js'
+import GraphNode from '../../graph/node.js'
 import Base from './base.js'
 import Fixup from './fixup-insert.js'
 
 class InsertFlow extends Base {
   constructor (tree, key) {
     super(tree, null)
+    this.init(key)
+  }
+
+  init (key) {
+    this.insertNode = null
+    this.key = key
     this.next = 'create'
 
-    this.key = key
-    this.insertNode = null
+    if (key instanceof GraphNode) {
+      this.insertNode = key.__node
+      this.key = key.__node.key
+      this.next = 'isEmpty'
+    }
 
     this.fix = null
   }

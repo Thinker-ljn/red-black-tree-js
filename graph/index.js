@@ -6,7 +6,7 @@ function Graph (tree) {
   this.currNode = null
 
   this.startX = 80
-  this.startY = 40
+  this.startY = 80
   this.intervalX = 20
   this.intervalY = 60
 
@@ -17,6 +17,8 @@ function Graph (tree) {
 
   this.canvas.setHeight(window.innerHeight)
   this.canvas.setWidth(window.innerWidth)
+
+  this.nodeList = []
 }
 
 Graph.prototype = {
@@ -30,7 +32,7 @@ Graph.prototype = {
     if (autoRender) this.renderAll()
   },
   drawNode (node) {
-    let graphNode = new Node(node)
+    let graphNode = node.graph ? node.graph : new Node(node)
     this.canvas.add(graphNode)
     if (node.parent) {
       let arrow = this.drawArrow(node.parent, node)
@@ -93,6 +95,25 @@ Graph.prototype = {
         }
       }
     }
+  },
+  generateNodes (datas) {
+    datas.forEach((key, i) => {
+      let graphNode = new Node(key)
+      let node = graphNode.__node
+
+      node.pos = {
+        x: i * 40 + 30,
+        y: 20
+      }
+
+      graphNode.set({
+        left: i * 40 + 30,
+        top: 20
+      })
+
+      this.canvas.add(graphNode)
+      this.nodeList.push(graphNode)
+    })
   }
 }
 

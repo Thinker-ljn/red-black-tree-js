@@ -34,6 +34,7 @@ class Step {
     }
 
     this.doAnimation(graph)
+    graph.moveNodeList()
   }
 
   findBeforeNode (graph) {

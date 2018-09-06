@@ -141,6 +141,17 @@ class AnimationGraph extends BaseGraph {
       bn.moveTo(0)
     }
   }
+
+  moveNodeList () {
+    this.nodeList.forEach((graphNode, i) => {
+      let node = graphNode.__node
+
+      node.pos.x = i * 40 + 30
+      this.move(graphNode, {
+        left: i * 40 + 30
+      })
+    })
+  }
 }
 
 export default AnimationGraph

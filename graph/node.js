@@ -1,3 +1,4 @@
+import Node from '../lib/node.js'
 let FabricNode = fabric.Group
 
 function getObjects ({key, pos, color}) {
@@ -22,6 +23,8 @@ function getObjects ({key, pos, color}) {
 
 class GraphNode extends FabricNode {
   constructor (node) {
+    if (!(node instanceof Node)) node = new Node(node)
+    if (node.graph instanceof GraphNode) return node.graph
     let [circle, text] = getObjects(node)
     let {x, y} = node.pos
     super([circle, text], {
@@ -81,6 +84,10 @@ class GraphNode extends FabricNode {
     }
 
     this.canvas.remove(this)
+  }
+
+  toString () {
+    return this.text.text
   }
 }
 

@@ -9,7 +9,6 @@ class RemoveFlow extends Base {
     super(tree, null)
     this.next = 'isEmpty'
 
-    this.bigFlow = true
     this.key = key
     this.deleteNode = null
     this.theBeforeNode = null
@@ -63,6 +62,7 @@ class RemoveFlow extends Base {
     if (!node.left.isNull && !node.right.isNull) {
       return this.findBeforeNode(node)
     } else {
+      this.theBeforeNode = node
       return this.remove(node)
     }
   }
@@ -116,7 +116,9 @@ class RemoveFlow extends Base {
   fixup () {
     if (isRed(this.theBeforeNode)) {
       this.next = 'finished'
-      return this.genStep('finished', {}, '被删除节点是红色节点，无需调整颜色，删除完成')
+      let step = this.genStep('finished', {}, '被删除节点是红色节点，无需调整颜色，删除完成')
+      step.nextEnd = true
+      return step
     }
     if (!this.fix) this.fix = new Fixup(this.tree, this.currNode, this.whichRemove)
 

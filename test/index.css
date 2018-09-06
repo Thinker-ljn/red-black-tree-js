@@ -6,14 +6,23 @@ body
   margin: 0;
   overflow: hidden;
 }
+.node-list
+{
+  width: 100vw;
+  height: 40px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-bottom: 1px solid #222;
+}
 .function-area
 {
   position: fixed;
-  top: 0;
-  right:0;
+  top: 40px;
+  right: 0;
 
   width: 400px;
-  height: 100vh;
+  height: calc(100vh - 40px);
 
   border-left: 1px solid #222;
 }
@@ -41,6 +50,27 @@ body
 {
   margin-bottom: 10px;
 }
+.hidden
+{
+  display: none;
+}
+input[type=text]
+{
+  font-size: 12px;
+  /*-webkit-box-shadow: 0 0 0 1000px #ccc inset;*/
+  -webkit-text-fill-color:#ccc !important;
+  background-color: transparent;
+  height: 24px;
+  width: 100px;
+  padding-left: .5em;
+  padding-right: .5em;
+  outline:none;
+  color: #666;
+  border: 1px solid #333;
+  box-sizing: border-box;
+  vertical-align: top;
+}
+
 button
 {
   -webkit-user-select: none;
