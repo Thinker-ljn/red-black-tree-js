@@ -10,22 +10,31 @@
 </head>
 <body>
     <canvas id="canvas"></canvas>
-    <button class="add" id="insert">插入数据</button>
+    <div class="node-list"></div>
+    <div class="function-area">
+        <div id="msg" class="msgs"></div>
+        <div class="menu">
+            <div class="row">
+                <label><input class="autoplay" name="autoplay" type="radio" value="1"/>自动播放</label>
+                <label><input class="autoplay" name="autoplay" type="radio" value="0" checked/>手动播放</label>
+            </div>
+            <div class="row">
+                <div class="ready">
+                    <input id="key" type="text" placeholder="结点key">
+                    <button id="insert">开始插入</button>
+                    <button id="remove">开始删除</button>
+                </div>
+                <div class="running hidden">
+                    正在<span class="running-key"></span>...
+                </div>
+            </div>
+            <div class="row step-handler hidden">
+                <button id="prev">上一步</button>
+                <button id="next">下一步</button>
+            </div>
+        </div>
+    </div>
 </body>
-<script src="./fabric.js"></script>
-<script src="./graph.js"></script>
-<script type="module">
-    import tree from '../index.js'
-    import dataGenerate from './data-generate.js'
-    let graph = new Graph(tree)
-    let datas = dataGenerate(128)
-    // datas.forEach(key => {
-    //     graph.doInsert(key, false)
-    // })
-    // graph.canvas.renderAll()
-    document.getElementById('insert').addEventListener('click', function (e) {
-        let key = datas.pop()
-        if (key) graph.doInsert(key)
-    }, false)
-</script>
+<script src="../graph/fabric.js"></script>
+<script type="module" src="./index.js"></script>
 </html>

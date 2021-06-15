@@ -4,9 +4,74 @@ body
   height: 100vh;
   padding: 0;
   margin: 0;
+  overflow: hidden;
+}
+.node-list
+{
+  width: 100vw;
+  height: 40px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-bottom: 1px solid #222;
+}
+.function-area
+{
+  position: fixed;
+  top: 40px;
+  right: 0;
+
+  width: 400px;
+  height: calc(100vh - 40px);
+
+  border-left: 1px solid #222;
+}
+.nodes
+{
+  width: 100%;
+  height: 300px;
+  border-bottom: 1px solid #222;
+}
+.msgs
+{
+  width: 100%;
+  height: calc(100% - 200px);
+  padding-bottom: 10px;
+  overflow: auto;
+}
+.menu
+{
+  border-top: 1px solid #222;
+  padding: 10px;
+  width: 100%;
+  height: 200px;
+}
+.row
+{
+  margin-bottom: 10px;
+}
+.hidden
+{
+  display: none;
+}
+input[type=text]
+{
+  font-size: 12px;
+  /*-webkit-box-shadow: 0 0 0 1000px #ccc inset;*/
+  -webkit-text-fill-color:#ccc !important;
+  background-color: transparent;
+  height: 24px;
+  width: 100px;
+  padding-left: .5em;
+  padding-right: .5em;
+  outline:none;
+  color: #666;
+  border: 1px solid #333;
+  box-sizing: border-box;
+  vertical-align: top;
 }
 
-.add
+button
 {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -29,26 +94,28 @@ body
   line-height: 1;
 
   word-spacing: -3px;
-  position: fixed;
-
-  bottom: 10px;
-  right: 10px;
 
   color: #ccc;
   border: solid 1px #666666;
   background-color: transparent;
 }
-.add:hover
+button:hover
 {
   color: #fff;
   border: solid 1px transparent;
   background-color: #222;
 }
 
-.add:active,
-.add.checked
+button:active
 {
   color: #ffa04c;
   border: solid 1px transparent;
   background-color: #222;
+}
+button[disabled]
+{
+  color: #666;
+  cursor: not-allowed;
+  background-color: #3d3d3d;
+  border: 1px solid transparent;
 }
